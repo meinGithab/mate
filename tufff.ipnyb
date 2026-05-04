@@ -1,0 +1,76 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+print("Funcția de gradul 2 are forma generală:")
+print("f(x) = a * x^2 + b * x + c")
+print()
+print("Unde:")
+print("a = coeficientul lui x^2")
+print("b = coeficientul lui x")
+print("c = termenul liber")
+print()
+
+a = float(input("Introdu coeficientul a: "))
+b = float(input("Introdu coeficientul b: "))
+c = float(input("Introdu coeficientul c: "))
+
+if a == 0:
+    print("Nu este o funcție de gradul 2, deoarece a = 0.")
+else:
+    # Calculăm vârful (vertex)
+    x_v = -b / (2 * a)
+    y_v = a * x_v**2 + b * x_v + c
+
+    # Calculăm rădăcinile (roots)
+    D = b**2 - 4 * a * c
+    if D > 0:
+        x1 = (-b - math.sqrt(D)) / (2 * a)
+        x2 = (-b + math.sqrt(D)) / (2 * a)
+        roots = [(x1, 0), (x2, 0)]
+        root_label = 'Intersecții cu Ox'
+    elif D == 0:
+        x1 = -b / (2 * a)
+        roots = [(x1, 0)]
+        root_label = 'Intersecție dublă cu Ox'
+    else:
+        roots = []
+        root_label = None
+
+    # Determinăm intervalul pentru x
+    if roots:
+        root_xs = [r[0] for r in roots]
+        x_min = min(root_xs + [x_v]) - 2
+        x_max = max(root_xs + [x_v]) + 2
+    else:
+        x_min = x_v - 5
+        x_max = x_v + 5
+
+    # Valori pentru x
+    x = np.linspace(x_min, x_max, 400)
+
+    # Calculăm f(x)
+    y = a * x**2 + b * x + c
+
+    # Desenăm graficul
+    plt.plot(x, y, label=f"f(x) = {a}x^2 + {b}x + {c}")
+    plt.axhline(0, color='black', linewidth=0.8)  # axa Ox
+    plt.axvline(0, color='black', linewidth=0.8)  # axa Oy
+    plt.grid(True)
+    plt.title("Graficul unei funcții de gradul 2")
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+
+    # Adăugăm punctele speciale
+    plt.scatter(x_v, y_v, color='red', zorder=5, label=f'Vârf ({x_v:.2f}, {y_v:.2f})')
+    if roots:
+        if len(roots) == 2:
+            plt.scatter([roots[0][0], roots[1][0]], [0, 0], color='blue', zorder=5, label=f'Intersecții cu Ox ({roots[0][0]:.2f}, 0) și ({roots[1][0]:.2f}, 0)')
+        else:
+            plt.scatter(roots[0][0], 0, color='blue', zorder=5, label=f'Intersecție dublă cu Ox ({roots[0][0]:.2f}, 0)')
+
+    # Intersecția cu Oy (y-axis)
+    plt.scatter(0, c, color='blue', zorder=5, label=f'Intersecție cu Oy (0, {c:.2f})')
+
+    plt.legend(loc='upper left')
+    plt.show()
